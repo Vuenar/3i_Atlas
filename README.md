@@ -1,4 +1,4 @@
-# 📍 3i Atlas Tool
+# ☄️ 3i Atlas Tool
 
 ![Status](https://img.shields.io/badge/status-finalizado-brightgreen)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -76,3 +76,4 @@ Sinta-se livre para estudar, reutilizar e adaptar o código, desde que mantenha 
 ---
 
 💡 **Nota:** Este projeto foi desenvolvido exclusivamente para fins acadêmicos, como parte da formação universitária na Estácio.
+
