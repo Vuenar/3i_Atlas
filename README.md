@@ -1,121 +1,78 @@
-# 3i Atlas Tool 📊🐍
+# 📍 3i Atlas Tool
 
-[![Status](https://img.shields.io/badge/status-finalizado-brightgreen?style=for-the-badge)]()
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)]()
-[![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)]()
+![Status](https://img.shields.io/badge/status-finalizado-brightgreen)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+![IDE](https://img.shields.io/badge/IDE-VSCode-blueviolet)
+![Git](https://img.shields.io/badge/versionamento-Git-orange)
 
-## 📌 Sobre o Projeto
+## 📖 Visão Geral
 
-O **3i Atlas Tool** é um projeto desenvolvido durante a disciplina **Tópicos de Big Data em Python**, no curso Tecnólogo em Análise e Desenvolvimento de Sistemas da **Estácio**.  
-Essa disciplina é **extensionista**, promovendo a aplicação prática de conceitos de Big Data para resolver problemas reais.
-
-O objetivo do projeto é **processar, analisar e visualizar dados de forma eficiente** utilizando a linguagem Python, com foco em **tratamento, manipulação e análise de grandes volumes de dados**.
-
----
-
-## 🎯 Objetivos
-
-- Aplicar conceitos aprendidos em sala de aula de forma prática.
-- Demonstrar o uso de bibliotecas e ferramentas do ecossistema Python para Big Data.
-- Criar uma base de código modular e escalável.
-- Produzir visualizações e relatórios que auxiliem na interpretação de dados.
+O **3i Atlas Tool** é um projeto desenvolvido na disciplina **Tópicos de Big Data em Python** do curso **Tecnólogo em Análise e Desenvolvimento de Sistemas** da **Estácio**.  
+O objetivo principal da ferramenta é realizar **análise de proximidade geográfica** e auxiliar no processamento de dados espaciais para estudos e aplicações práticas.
 
 ---
 
-## 🛠 Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
-- **Python 3.10+** 🐍  
-- **Pandas** – Manipulação e tratamento de dados.
-- **NumPy** – Operações numéricas e vetoriais.
-- **Matplotlib / Seaborn** – Visualização gráfica.
-- **Jupyter Notebook** – Ambiente interativo de desenvolvimento.
-- **Git & GitHub** – Controle de versão e colaboração.
+- **Python 3.10+**
+- Bibliotecas para análise e manipulação de dados
+- Ferramentas de versionamento **Git**
+- **VSCode** como ambiente de desenvolvimento
 
 ---
 
 ## 📂 Estrutura do Projeto
 
 ```
-3i-Atlas-Tool/
-│── data/               # Conjunto de dados utilizados
-│── notebooks/          # Análises e protótipos
-│── src/                # Código-fonte principal
-│── requirements.txt    # Dependências do projeto
-│── README.md           # Documentação do projeto
+3i Atlas Tool/
+│   3I_ATLAS_proximity_tool.py    # Script principal da aplicação
+│   README.md                     # Documentação do projeto
+│
+├── assets/
+│   └── img/
+│       └── logo.png              # Logotipo utilizado no projeto
+│
+├── .history/                     # Histórico de versões de desenvolvimento
+│
+└── .git/                         # Controle de versão Git
 ```
 
 ---
 
-## 🔍 Metodologia Utilizada
+## 🚀 Como Executar
 
-O desenvolvimento seguiu a abordagem **Data Pipeline**, composta pelas etapas:
+1. **Clonar o repositório**
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd 3i Atlas Tool
+   ```
 
-1. **Coleta de Dados** – Importação e carregamento dos datasets.
-2. **Tratamento de Dados** – Limpeza, padronização e formatação.
-3. **Análise Exploratória (EDA)** – Estatísticas descritivas e identificação de padrões.
-4. **Visualização** – Criação de gráficos para melhor interpretação dos resultados.
-5. **Documentação** – Registro do processo e resultados obtidos.
+2. **Instalar dependências**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
----
-
-## 📦 Instalação e Uso
-
-1. **Clone o repositório**
-```bash
-git clone https://github.com/seu-usuario/3i-Atlas-Tool.git
-```
-
-2. **Acesse o diretório**
-```bash
-cd 3i-Atlas-Tool
-```
-
-3. **Crie um ambiente virtual (opcional, mas recomendado)**
-```bash
-python -m venv venv
-source venv/bin/activate   # Linux/Mac
-venv\Scripts\activate      # Windows
-```
-
-4. **Instale as dependências**
-```bash
-pip install -r requirements.txt
-```
-
-5. **Execute os notebooks ou scripts**
-```bash
-jupyter notebook
-```
+3. **Executar a aplicação**
+   ```bash
+   python 3I_ATLAS_proximity_tool.py
+   ```
 
 ---
 
-## 📊 Exemplo de Uso
+## 📷 Capturas de Tela
 
-Exemplo de carregamento e visualização de dados:
-
-```python
-import pandas as pd
-import matplotlib.pyplot as plt
-
-df = pd.read_csv("data/exemplo.csv")
-print(df.head())
-
-df['coluna'].value_counts().plot(kind='bar')
-plt.show()
-```
+<p align="center">
+  <img src="assets/img/logo.png" alt="Logo do Projeto" width="200"/>
+</p>
 
 ---
 
 ## 📜 Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Este projeto está licenciado sob a licença **MIT**.  
+Sinta-se livre para estudar, reutilizar e adaptar o código, desde que mantenha os créditos originais.
 
 ---
 
-## 👨‍💻 Autor
-
-Desenvolvido por **Uelison Couto** 💻  
-Curso: Tecnólogo em Análise e Desenvolvimento de Sistemas – **Estácio**  
-Disciplina: Tópicos de Big Data em Python – Extensão Acadêmica
-
-
+💡 **Nota:** Este projeto foi desenvolvido exclusivamente para fins acadêmicos, como parte da formação universitária na Estácio.
