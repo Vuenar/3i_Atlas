@@ -106,19 +106,6 @@ plt.show()
 
 ---
 
-## 🤝 Contribuições
-
-Contribuições são bem-vindas!  
-Siga os passos abaixo para colaborar:
-
-1. **Fork** este repositório.
-2. Crie uma nova branch (`git checkout -b feature/nova-funcionalidade`).
-3. Faça suas alterações e commit (`git commit -m 'Descrição da alteração'`).
-4. Envie para o seu fork (`git push origin feature/nova-funcionalidade`).
-5. Abra um **Pull Request**.
-
----
-
 ## 📜 Licença
 
 Este projeto está licenciado sob a [MIT License](LICENSE).
@@ -130,4 +117,5 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 Desenvolvido por **Uelison Couto** 💻  
 Curso: Tecnólogo em Análise e Desenvolvimento de Sistemas – **Estácio**  
 Disciplina: Tópicos de Big Data em Python – Extensão Acadêmica
+
 
