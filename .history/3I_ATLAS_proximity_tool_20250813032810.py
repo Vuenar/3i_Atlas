@@ -54,22 +54,24 @@ class ProximityApp:
         frm.grid(row=0, column=0, sticky='nsew')
 
         # ====== Carregar a logo antes do título ======
-        logo_img = Image.open("assets/img/logo.png")
+        logo_img = Image.open(".assets\img\logo.png")
         logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
         self.logo_tk = ImageTk.PhotoImage(logo_img)
 
-        # Definir ícone da aplicação
+        # Usar como ícone da aplicação
         master.iconphoto(False, self.logo_tk)
 
         # Título com logo à esquerda
-        title_label = ttk.Label(
-            frm,
-            text=" 3I/ATLAS - Calculadora de Proximidade",
-            image=self.logo_tk,
-            compound="left",
-            font=("Segoe UI", 14, "bold")
-        )
+        title_label = ttk.Label(frm, text=" 3I/ATLAS - Calculadora de Proximidade",
+                                image=self.logo_tk, compound="left",
+                                font=("Segoe UI", 14, "bold"))
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 15))
+
+        
+        # Carregar imagem e redimensionar
+        logo_img = Image.open("logo.png")
+        logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
+        self.logo_tk = ImageTk.PhotoImage(logo_img)
 
         # Date inputs (day, month, year)
         ttk.Label(frm, text='Dia').grid(row=1, column=0)

@@ -1,5 +1,5 @@
 """
-3I/ATLAS proximity calculator (single-file) - versão com design melhorado + Mkm
+3I/ATLAS proximity calculator (single-file) - versão com design melhorado
 """
 
 import tkinter as tk
@@ -9,7 +9,6 @@ from zoneinfo import ZoneInfo
 from astropy.time import Time
 from astroquery.jplhorizons import Horizons
 import math
-from PIL import Image, ImageTk
 
 # Importações do Matplotlib
 import matplotlib.pyplot as plt
@@ -32,8 +31,6 @@ PLANET_CODES = {
     'Sun': 10, # Adicionando o Sol
 }
 
-from PIL import Image, ImageTk  # no topo do arquivo
-
 class ProximityApp:
     def __init__(self, master):
         self.master = master
@@ -53,22 +50,9 @@ class ProximityApp:
         frm = ttk.Frame(master, padding=15)
         frm.grid(row=0, column=0, sticky='nsew')
 
-        # ====== Carregar a logo antes do título ======
-        logo_img = Image.open("assets/img/logo.png")
-        logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
-        self.logo_tk = ImageTk.PhotoImage(logo_img)
-
-        # Definir ícone da aplicação
-        master.iconphoto(False, self.logo_tk)
-
-        # Título com logo à esquerda
-        title_label = ttk.Label(
-            frm,
-            text=" 3I/ATLAS - Calculadora de Proximidade",
-            image=self.logo_tk,
-            compound="left",
-            font=("Segoe UI", 14, "bold")
-        )
+        # Título
+        title_label = ttk.Label(frm, text="3I/ATLAS - Calculadora de Proximidade", 
+                                font=("Segoe UI", 14, "bold"))
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 15))
 
         # Date inputs (day, month, year)
@@ -176,19 +160,16 @@ class ProximityApp:
 
             nearest_name, nearest_au = distances[0]
             nearest_km = nearest_au * AU_TO_KM
-            nearest_mkm = nearest_km / 1_000_000  # Milhões de km
 
             out_lines = []
             out_lines.append(f'Data e hora (Brasília): {dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")})')
             out_lines.append('\nResultado:')
             out_lines.append(f'Objeto consultado: 3I/ATLAS (C/2025 N1)')
             out_lines.append(f'Planeta mais próximo nesse instante: {nearest_name}')
-            out_lines.append('Distância: {:.6f} AU  (≈ {:.0f} km ≈ {:.2f} Mkm)'.format(nearest_au, nearest_km, nearest_mkm))
+            out_lines.append('Distância: {:.6f} AU  (≈ {:.0f} km)'.format(nearest_au, nearest_km))
             out_lines.append('\nTabela de distâncias (AU):')
             for pname, dau in distances:
-                km = dau * AU_TO_KM
-                mkm = km / 1_000_000
-                out_lines.append('  - {:12s} : {:.6f} AU (≈ {:.0f} km ≈ {:.2f} Mkm)'.format(pname, dau, km, mkm))
+                out_lines.append('  - {:12s} : {:.6f} AU (≈ {:.0f} km)'.format(pname, dau, dau*AU_TO_KM))
 
             out = '\n'.join(out_lines)
             self._set_results(out)

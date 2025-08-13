@@ -9,7 +9,6 @@ from zoneinfo import ZoneInfo
 from astropy.time import Time
 from astroquery.jplhorizons import Horizons
 import math
-from PIL import Image, ImageTk
 
 # Importações do Matplotlib
 import matplotlib.pyplot as plt
@@ -18,6 +17,8 @@ from matplotlib.figure import Figure
 
 # Conversion constant
 AU_TO_KM = 149597870.7
+
+
 
 # Planet mapping: NAIF/HORIZONS major-body barycenter IDs (1..8)
 PLANET_CODES = {
@@ -31,8 +32,6 @@ PLANET_CODES = {
     'Neptune': 8,
     'Sun': 10, # Adicionando o Sol
 }
-
-from PIL import Image, ImageTk  # no topo do arquivo
 
 class ProximityApp:
     def __init__(self, master):
@@ -53,22 +52,10 @@ class ProximityApp:
         frm = ttk.Frame(master, padding=15)
         frm.grid(row=0, column=0, sticky='nsew')
 
-        # ====== Carregar a logo antes do título ======
-        logo_img = Image.open("assets/img/logo.png")
-        logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
-        self.logo_tk = ImageTk.PhotoImage(logo_img)
-
-        # Definir ícone da aplicação
-        master.iconphoto(False, self.logo_tk)
-
-        # Título com logo à esquerda
-        title_label = ttk.Label(
-            frm,
-            text=" 3I/ATLAS - Calculadora de Proximidade",
-            image=self.logo_tk,
-            compound="left",
-            font=("Segoe UI", 14, "bold")
-        )
+        # Título
+        title_label = ttk.Label(frm, text=" 3I/ATLAS - Calculadora de Proximidade",
+                        image=self.logo_tk, compound="left",
+                        font=("Segoe UI", 14, "bold"))
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 15))
 
         # Date inputs (day, month, year)

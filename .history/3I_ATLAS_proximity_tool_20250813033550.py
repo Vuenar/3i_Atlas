@@ -71,6 +71,13 @@ class ProximityApp:
         )
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 15))
 
+
+        
+        # Carregar imagem e redimensionar
+        logo_img = Image.open("logo.png")
+        logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
+        self.logo_tk = ImageTk.PhotoImage(logo_img)
+
         # Date inputs (day, month, year)
         ttk.Label(frm, text='Dia').grid(row=1, column=0)
         self.day_var = tk.StringVar(value=str(datetime.now(ZoneInfo('America/Sao_Paulo')).day))
