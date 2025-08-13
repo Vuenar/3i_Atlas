@@ -199,7 +199,7 @@ class ProximityApp:
             planet_names = [p[0] for p in distances]
             distances_mkm = [(p[1] * AU_TO_KM) / 1_000_000 for p in distances]
 
-            fig = Figure(figsize=(5, 4), dpi=100)
+            fig = Figure(figsize=(, 4), dpi=100)
             ax = fig.add_subplot(111)
 
             colors = plt.cm.tab10(np.linspace(0, 1, len(planet_names)))

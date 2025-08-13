@@ -202,7 +202,7 @@ class ProximityApp:
             fig = Figure(figsize=(5, 4), dpi=100)
             ax = fig.add_subplot(111)
 
-            colors = plt.cm.tab10(np.linspace(0, 1, len(planet_names)))
+            colors = plt.cm.tab10(np.linspace(, 1, len(planet_names)))
             bars = ax.bar(planet_names, distances_mkm, color=colors, edgecolor='black')
 
             for bar, value in zip(bars, distances_mkm):

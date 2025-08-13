@@ -1,5 +1,5 @@
 """
-3I/ATLAS proximity calculator (single-file) - versão com design melhorado + Mkm + gráfico ajustado
+3I/ATLAS proximity calculator (single-file) - versão com design melhorado + Mkm + gráfico de distâncias ajustado
 """
 
 import tkinter as tk
@@ -15,7 +15,6 @@ from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-import numpy as np
 
 # Conversion constant
 AU_TO_KM = 149597870.7
@@ -58,8 +57,10 @@ class ProximityApp:
         logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
         self.logo_tk = ImageTk.PhotoImage(logo_img)
 
+        # Definir ícone da aplicação
         master.iconphoto(False, self.logo_tk)
 
+        # Título com logo à esquerda
         title_label = ttk.Label(
             frm,
             text=" 3I/ATLAS - Calculadora de Proximidade",
@@ -69,7 +70,7 @@ class ProximityApp:
         )
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 15))
 
-        # Date inputs
+        # Date inputs (day, month, year)
         ttk.Label(frm, text='Dia').grid(row=1, column=0)
         self.day_var = tk.StringVar(value=str(datetime.now(ZoneInfo('America/Sao_Paulo')).day))
         self.day = ttk.Entry(frm, width=5, textvariable=self.day_var)
@@ -85,7 +86,7 @@ class ProximityApp:
         self.year = ttk.Entry(frm, width=8, textvariable=self.year_var)
         self.year.grid(row=2, column=2, padx=5, pady=3)
 
-        # Time inputs
+        # Time inputs (hour, minute, second)
         ttk.Label(frm, text='Hora (0-23)').grid(row=3, column=0)
         self.hour_var = tk.StringVar(value=str(datetime.now(ZoneInfo('America/Sao_Paulo')).hour))
         self.hour = ttk.Entry(frm, width=5, textvariable=self.hour_var)
@@ -101,6 +102,7 @@ class ProximityApp:
         self.second = ttk.Entry(frm, width=8, textvariable=self.second_var)
         self.second.grid(row=4, column=2, padx=5, pady=3)
 
+        # Info label
         ttk.Label(frm, text='Timezone: America/Sao_Paulo (Brasília)', 
                   font=("Segoe UI", 9, "italic")).grid(row=5, column=0, columnspan=3, pady=(10,5))
 
@@ -121,6 +123,7 @@ class ProximityApp:
         self.results.insert('1.0', 'Resultados aparecerão aqui. Clique em "Calcular proximidade" para iniciar.\n')
         self.results.configure(state='disabled')
 
+        # Placeholder para o gráfico
         self.chart_widget = None
 
     def _set_results(self, text):
@@ -199,11 +202,9 @@ class ProximityApp:
             planet_names = [p[0] for p in distances]
             distances_mkm = [(p[1] * AU_TO_KM) / 1_000_000 for p in distances]
 
-            fig = Figure(figsize=(5, 4), dpi=100)
+            fig = Figure(figsize=(6, 4), dpi=100)
             ax = fig.add_subplot(111)
-
-            colors = plt.cm.tab10(np.linspace(0, 1, len(planet_names)))
-            bars = ax.bar(planet_names, distances_mkm, color=colors, edgecolor='black')
+            bars = ax.bar(planet_names, distances_mkm, color='skyblue', edgecolor='black')
 
             for bar, value in zip(bars, distances_mkm):
                 ax.text(bar.get_x() + bar.get_width()/2, bar.get_height(),
@@ -212,7 +213,7 @@ class ProximityApp:
             ax.set_ylabel("Distância (Milhões de km)")
             ax.set_xlabel("Planetas")
             ax.set_title("Distância do 3I/ATLAS para cada planeta")
-            ax.tick_params(axis='x', rotation=45)
+            ax.tick_params(axis='x', rotation=60)
             ax.set_xticklabels(planet_names, ha='right')
 
             fig.tight_layout(pad=2.0)

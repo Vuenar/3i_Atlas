@@ -199,7 +199,7 @@ class ProximityApp:
             planet_names = [p[0] for p in distances]
             distances_mkm = [(p[1] * AU_TO_KM) / 1_000_000 for p in distances]
 
-            fig = Figure(figsize=(5, 4), dpi=100)
+            fig = Figure(figsize=(6, 4), dpi=100)
             ax = fig.add_subplot(111)
 
             colors = plt.cm.tab10(np.linspace(0, 1, len(planet_names)))
@@ -215,7 +215,7 @@ class ProximityApp:
             ax.tick_params(axis='x', rotation=45)
             ax.set_xticklabels(planet_names, ha='right')
 
-            fig.tight_layout(pad=2.0)
+            fig.tight_layout(pad=3.0)
 
             if self.chart_widget:
                 self.chart_widget.get_tk_widget().destroy()

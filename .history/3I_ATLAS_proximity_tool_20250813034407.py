@@ -1,10 +1,11 @@
 """
-3I/ATLAS proximity calculator (single-file) - versão com design melhorado + Mkm + gráfico ajustado
+3I/ATLAS proximity calculator (single-file) - versão com design melhorado + Mkm
 """
 
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime, timezone
+from turtle import distance
 from zoneinfo import ZoneInfo
 from astropy.time import Time
 from astroquery.jplhorizons import Horizons
@@ -15,7 +16,6 @@ from PIL import Image, ImageTk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-import numpy as np
 
 # Conversion constant
 AU_TO_KM = 149597870.7
@@ -33,6 +33,7 @@ PLANET_CODES = {
     'Sun': 10, # Adicionando o Sol
 }
 
+from PIL import Image, ImageTk  # no topo do arquivo
 
 class ProximityApp:
     def __init__(self, master):
@@ -58,8 +59,10 @@ class ProximityApp:
         logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
         self.logo_tk = ImageTk.PhotoImage(logo_img)
 
+        # Definir ícone da aplicação
         master.iconphoto(False, self.logo_tk)
 
+        # Título com logo à esquerda
         title_label = ttk.Label(
             frm,
             text=" 3I/ATLAS - Calculadora de Proximidade",
@@ -69,7 +72,7 @@ class ProximityApp:
         )
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 15))
 
-        # Date inputs
+        # Date inputs (day, month, year)
         ttk.Label(frm, text='Dia').grid(row=1, column=0)
         self.day_var = tk.StringVar(value=str(datetime.now(ZoneInfo('America/Sao_Paulo')).day))
         self.day = ttk.Entry(frm, width=5, textvariable=self.day_var)
@@ -85,7 +88,7 @@ class ProximityApp:
         self.year = ttk.Entry(frm, width=8, textvariable=self.year_var)
         self.year.grid(row=2, column=2, padx=5, pady=3)
 
-        # Time inputs
+        # Time inputs (hour, minute, second)
         ttk.Label(frm, text='Hora (0-23)').grid(row=3, column=0)
         self.hour_var = tk.StringVar(value=str(datetime.now(ZoneInfo('America/Sao_Paulo')).hour))
         self.hour = ttk.Entry(frm, width=5, textvariable=self.hour_var)
@@ -101,6 +104,7 @@ class ProximityApp:
         self.second = ttk.Entry(frm, width=8, textvariable=self.second_var)
         self.second.grid(row=4, column=2, padx=5, pady=3)
 
+        # Info label
         ttk.Label(frm, text='Timezone: America/Sao_Paulo (Brasília)', 
                   font=("Segoe UI", 9, "italic")).grid(row=5, column=0, columnspan=3, pady=(10,5))
 
@@ -120,8 +124,32 @@ class ProximityApp:
         self.results.grid(row=7, column=0, columnspan=3, pady=(12,0))
         self.results.insert('1.0', 'Resultados aparecerão aqui. Clique em "Calcular proximidade" para iniciar.\n')
         self.results.configure(state='disabled')
+        
+        # Após gerar a tabela de distâncias no final do método calculate
+        # Adicionar gráfico de barras com Matplotlib
+        planet_names = [p[0] for p in distance]
+        distances_mkm = [(p[1] * AU_TO_KM) / 1_000_000 for p in distances]  # conversão para Mkm
 
-        self.chart_widget = None
+        # Criar figura
+        fig = Figure(figsize=(6, 4), dpi=100)
+        ax = fig.add_subplot(111)
+        bars = ax.bar(planet_names, distances_mkm, color='skyblue', edgecolor='black')
+
+        # Adicionar valores em cima das barras
+        for bar, value in zip(bars, distances_mkm):
+            ax.text(bar.get_x() + bar.get_width()/2, bar.get_height(),
+                    f"{value:.2f}", ha='center', va='bottom', fontsize=8)
+
+        ax.set_ylabel("Distância (Milhões de km)")
+        ax.set_xlabel("Planetas")
+        ax.set_title("Distância do 3I/ATLAS para cada planeta")
+        ax.tick_params(axis='x', rotation=45)
+
+        # Criar Canvas do gráfico no Tkinter
+        canvas = FigureCanvasTkAgg(fig, master=self.master)
+        canvas.draw()
+        canvas.get_tk_widget().grid(row=8, column=0, columnspan=3, pady=10)
+
 
     def _set_results(self, text):
         self.results.configure(state='normal')
@@ -139,11 +167,8 @@ class ProximityApp:
         self.second_var.set('0')
         self._set_results('Campos resetados. Insira nova data/hora e clique em "Calcular proximidade".')
 
-        if self.chart_widget:
-            self.chart_widget.get_tk_widget().destroy()
-            self.chart_widget = None
-
     def calculate(self):
+        # Disable button while running
         self.calc_btn.config(state='disabled')
         try:
             d = int(self.day_var.get())
@@ -178,58 +203,28 @@ class ProximityApp:
 
             nearest_name, nearest_au = distances[0]
             nearest_km = nearest_au * AU_TO_KM
-            nearest_mkm = nearest_km / 1_000_000
+            nearest_mkm = nearest_km / 1_000_000  # Milhões de km
 
-            out_lines = [
-                f'Data e hora (Brasília): {dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")})',
-                '\nResultado:',
-                f'Objeto consultado: 3I/ATLAS (C/2025 N1)',
-                f'Planeta mais próximo nesse instante: {nearest_name}',
-                'Distância: {:.6f} AU  (≈ {:.0f} km ≈ {:.2f} Mkm)'.format(nearest_au, nearest_km, nearest_mkm),
-                '\nTabela de distâncias (AU):'
-            ]
+            out_lines = []
+            out_lines.append(f'Data e hora (Brasília): {dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")})')
+            out_lines.append('\nResultado:')
+            out_lines.append(f'Objeto consultado: 3I/ATLAS (C/2025 N1)')
+            out_lines.append(f'Planeta mais próximo nesse instante: {nearest_name}')
+            out_lines.append('Distância: {:.6f} AU  (≈ {:.0f} km ≈ {:.2f} Mkm)'.format(nearest_au, nearest_km, nearest_mkm))
+            out_lines.append('\nTabela de distâncias (AU):')
             for pname, dau in distances:
                 km = dau * AU_TO_KM
                 mkm = km / 1_000_000
                 out_lines.append('  - {:12s} : {:.6f} AU (≈ {:.0f} km ≈ {:.2f} Mkm)'.format(pname, dau, km, mkm))
 
-            self._set_results('\n'.join(out_lines))
-
-            # ===== Gráfico =====
-            planet_names = [p[0] for p in distances]
-            distances_mkm = [(p[1] * AU_TO_KM) / 1_000_000 for p in distances]
-
-            fig = Figure(figsize=(5, 4), dpi=100)
-            ax = fig.add_subplot(111)
-
-            colors = plt.cm.tab10(np.linspace(0, 1, len(planet_names)))
-            bars = ax.bar(planet_names, distances_mkm, color=colors, edgecolor='black')
-
-            for bar, value in zip(bars, distances_mkm):
-                ax.text(bar.get_x() + bar.get_width()/2, bar.get_height(),
-                        f"{value:.2f}", ha='center', va='bottom', fontsize=8)
-
-            ax.set_ylabel("Distância (Milhões de km)")
-            ax.set_xlabel("Planetas")
-            ax.set_title("Distância do 3I/ATLAS para cada planeta")
-            ax.tick_params(axis='x', rotation=45)
-            ax.set_xticklabels(planet_names, ha='right')
-
-            fig.tight_layout(pad=2.0)
-
-            if self.chart_widget:
-                self.chart_widget.get_tk_widget().destroy()
-
-            self.chart_widget = FigureCanvasTkAgg(fig, master=self.master)
-            self.chart_widget.draw()
-            self.chart_widget.get_tk_widget().grid(row=8, column=0, columnspan=3, pady=10)
+            out = '\n'.join(out_lines)
+            self._set_results(out)
 
         except Exception as e:
             messagebox.showerror('Erro', f'Ocorreu um erro:\n{e}')
             self._set_results('Erro ao executar a consulta. Verifique a conexão com a internet e os valores inseridos.')
         finally:
             self.calc_btn.config(state='normal')
-
 
 if __name__ == '__main__':
     root = tk.Tk()
