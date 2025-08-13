@@ -1,9 +1,8 @@
 # 3i Atlas Tool 📊🐍
 
-[![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge)]()
+[![Status](https://img.shields.io/badge/status-finalizado-brightgreen?style=for-the-badge)]()
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)]()
 [![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)]()
-[![Contributions](https://img.shields.io/badge/contribuições-bem%20vindas-brightgreen?style=for-the-badge&logo=github)]()
 
 ## 📌 Sobre o Projeto
 
@@ -131,3 +130,4 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 Desenvolvido por **Uelison Couto** 💻  
 Curso: Tecnólogo em Análise e Desenvolvimento de Sistemas – **Estácio**  
 Disciplina: Tópicos de Big Data em Python – Extensão Acadêmica
+
