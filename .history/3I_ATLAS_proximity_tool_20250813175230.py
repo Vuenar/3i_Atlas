@@ -1,3 +1,7 @@
+"""
+3I/ATLAS proximity calculator (single-file) - versão com design melhorado + Mkm + gráfico ajustado
+"""
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime, timezone
@@ -7,14 +11,16 @@ from astroquery.jplhorizons import Horizons
 import math
 from PIL import Image, ImageTk
 
-# Matplotlib
+# Importações do Matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np
 
+# Conversion constant
 AU_TO_KM = 149597870.7
 
+# Planet mapping: NAIF/HORIZONS major-body barycenter IDs (1..8)
 PLANET_CODES = {
     'Mercury': 1,
     'Venus': 2,
@@ -24,28 +30,30 @@ PLANET_CODES = {
     'Saturn': 6,
     'Uranus': 7,
     'Neptune': 8,
-    'Sun': 10,
+    'Sun': 10, # Adicionando o Sol
 }
+
 
 class ProximityApp:
     def __init__(self, master):
         self.master = master
         master.title('3I/ATLAS proximity (C/2025 N1) - Brasília time')
-        master.resizable(True, True)
+        master.resizable(False, False)
 
-        master.columnconfigure(0, weight=1)
-        master.rowconfigure(0, weight=1)
-
+        # Tema moderno
         style = ttk.Style(master)
         style.theme_use("clam")
+
+        # Fontes e estilos
         style.configure("TLabel", font=("Segoe UI", 10))
         style.configure("TButton", font=("Segoe UI", 10, "bold"), padding=6)
         style.configure("TEntry", padding=4)
-
+        
+        # Frame principal
         frm = ttk.Frame(master, padding=15)
         frm.grid(row=0, column=0, sticky='nsew')
-        frm.columnconfigure(0, weight=1)
 
+        # ====== Carregar a logo antes do título ======
         logo_img = Image.open("assets/img/logo.png")
         logo_img = logo_img.resize((32, 32), Image.Resampling.LANCZOS)
         self.logo_tk = ImageTk.PhotoImage(logo_img)
@@ -61,7 +69,7 @@ class ProximityApp:
         )
         title_label.grid(row=0, column=0, columnspan=3, pady=(0, 15))
 
-        # Inputs de data/hora
+        # Date inputs
         ttk.Label(frm, text='Dia').grid(row=1, column=0)
         self.day_var = tk.StringVar(value=str(datetime.now(ZoneInfo('America/Sao_Paulo')).day))
         self.day = ttk.Entry(frm, width=5, textvariable=self.day_var)
@@ -77,6 +85,7 @@ class ProximityApp:
         self.year = ttk.Entry(frm, width=8, textvariable=self.year_var)
         self.year.grid(row=2, column=2, padx=5, pady=3)
 
+        # Time inputs
         ttk.Label(frm, text='Hora (0-23)').grid(row=3, column=0)
         self.hour_var = tk.StringVar(value=str(datetime.now(ZoneInfo('America/Sao_Paulo')).hour))
         self.hour = ttk.Entry(frm, width=5, textvariable=self.hour_var)
@@ -93,11 +102,11 @@ class ProximityApp:
         self.second.grid(row=4, column=2, padx=5, pady=3)
 
         ttk.Label(frm, text='Timezone: America/Sao_Paulo (Brasília)', 
-                  font=("Segoe UI", 9, "italic")).grid(row=5, column=0, columnspan=3, pady=(10, 5))
+                  font=("Segoe UI", 9, "italic")).grid(row=5, column=0, columnspan=3, pady=(10,5))
 
-        # Botões
+        # Buttons
         btn_frame = ttk.Frame(frm)
-        btn_frame.grid(row=6, column=0, columnspan=3, pady=(8, 0))
+        btn_frame.grid(row=6, column=0, columnspan=3, pady=(8,0))
 
         self.calc_btn = ttk.Button(btn_frame, text='Calcular proximidade', command=self.calculate)
         self.calc_btn.grid(row=0, column=0, padx=8)
@@ -105,22 +114,14 @@ class ProximityApp:
         self.reset_btn = ttk.Button(btn_frame, text='Resetar', command=self.reset)
         self.reset_btn.grid(row=0, column=1, padx=8)
 
-        # Área de resultados
-        results_frame = ttk.Frame(frm, padding=10, relief="groove")
-        results_frame.grid(row=7, column=0, columnspan=3, sticky="nsew", pady=(12, 0))
-        results_frame.columnconfigure(0, weight=1)
-
-        self.results = tk.Text(results_frame, width=72, height=14, wrap='word',
+        # Results area
+        self.results = tk.Text(frm, width=72, height=14, wrap='word',
                                bg="#f9f9f9", fg="#333333", font=("Consolas", 10))
-        self.results.grid(row=0, column=0, sticky="nsew")
+        self.results.grid(row=7, column=0, columnspan=3, pady=(12,0))
         self.results.insert('1.0', 'Resultados aparecerão aqui. Clique em "Calcular proximidade" para iniciar.\n')
         self.results.configure(state='disabled')
 
         self.chart_widget = None
-
-        # Rodapé com copyright
-        footer = ttk.Label(master, text="© 2025 - Criado por Vuenar", font=("Segoe UI", 9, "italic"))
-        footer.grid(row=1, column=0, pady=(5, 5), sticky="s")
 
     def _set_results(self, text):
         self.results.configure(state='normal')
@@ -145,10 +146,6 @@ class ProximityApp:
     def calculate(self):
         self.calc_btn.config(state='disabled')
         try:
-            # Mensagem de carregamento imediata
-            self._set_results("Carregando proximidades ...\n")
-            self.master.update_idletasks()
-
             d = int(self.day_var.get())
             m = int(self.month_var.get())
             y = int(self.year_var.get())
@@ -163,10 +160,7 @@ class ProximityApp:
             t = Time(dt_utc, scale='utc')
             jd_tdb = t.tdb.jd
 
-            self._set_results(
-                'Carregando proximidades ...\nConsultando JPL HORIZONS para a data (TDB JD = {:.6f})...\n'.format(jd_tdb)
-            )
-            self.master.update_idletasks()
+            self._set_results('Consultando JPL HORIZONS para a data (TDB JD = {:.6f})...\n'.format(jd_tdb))
 
             comet = Horizons(id='C/2025 N1', id_type='designation', location='@0', epochs=jd_tdb)
             comet_vec = comet.vectors()
@@ -187,7 +181,7 @@ class ProximityApp:
             nearest_mkm = nearest_km / 1_000_000
 
             out_lines = [
-                f'Data e hora (Brasília): {dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")}',
+                f'Data e hora (Brasília): {dt_local.strftime("%Y-%m-%d %H:%M:%S %Z")})',
                 '\nResultado:',
                 f'Objeto consultado: 3I/ATLAS (C/2025 N1)',
                 f'Planeta mais próximo nesse instante: {nearest_name}',
@@ -201,35 +195,38 @@ class ProximityApp:
 
             self._set_results('\n'.join(out_lines))
 
-            # ===== Gráfico de Pizza =====
+            # ===== Gráfico =====
             planet_names = [p[0] for p in distances]
             distances_mkm = [(p[1] * AU_TO_KM) / 1_000_000 for p in distances]
+            fig, ax = plt.subplots(constrained_layout=False)
 
             fig = Figure(figsize=(5, 4), dpi=100)
             ax = fig.add_subplot(111)
+            
+            bottom, top = ax.get_ylim()
+            ax.set_ylim(bottom, top * 1.10)
 
-            wedges, texts, autotexts = ax.pie(
-                distances_mkm,
-                labels=planet_names,
-                autopct='%1.1f%%',
-                startangle=140,
-                colors=plt.cm.tab10(np.linspace(0, 1, len(planet_names)))
-            )
+            colors = plt.cm.tab10(np.linspace(0, 1, len(planet_names)))
+            bars = ax.bar(planet_names, distances_mkm, color=colors, edgecolor='black')
 
-            ax.set_title("Distância relativa do 3I/ATLAS para cada planeta", pad=15)
-            for text in texts:
-                text.set_fontsize(8)
-            for autotext in autotexts:
-                autotext.set_fontsize(8)
+            for bar, value in zip(bars, distances_mkm):
+                ax.text(bar.get_x() + bar.get_width()/2, bar.get_height(),
+                        f"{value:.2f}", ha='center', va='bottom', fontsize=8)
 
-            fig.tight_layout(pad=2.5)
+            ax.set_ylabel("Distância (Milhões de km)")
+            ax.set_xlabel("Planetas")
+            ax.set_title("Distância do 3I/ATLAS para cada planeta")
+            ax.tick_params(axis='x', rotation=45)
+            ax.set_xticklabels(planet_names, ha='right')
+
+            fig.tight_layout(pad=2.0)
 
             if self.chart_widget:
                 self.chart_widget.get_tk_widget().destroy()
 
             self.chart_widget = FigureCanvasTkAgg(fig, master=self.master)
             self.chart_widget.draw()
-            self.chart_widget.get_tk_widget().grid(row=8, column=0, columnspan=3, pady=15, sticky="nsew")
+            self.chart_widget.get_tk_widget().grid(row=8, column=0, columnspan=3, pady=10)
 
         except Exception as e:
             messagebox.showerror('Erro', f'Ocorreu um erro:\n{e}')

@@ -118,10 +118,6 @@ class ProximityApp:
 
         self.chart_widget = None
 
-        # Rodapé com copyright
-        footer = ttk.Label(master, text="© 2025 - Criado por Vuenar", font=("Segoe UI", 9, "italic"))
-        footer.grid(row=1, column=0, pady=(5, 5), sticky="s")
-
     def _set_results(self, text):
         self.results.configure(state='normal')
         self.results.delete('1.0', tk.END)
@@ -145,7 +141,7 @@ class ProximityApp:
     def calculate(self):
         self.calc_btn.config(state='disabled')
         try:
-            # Mensagem de carregamento imediata
+            # 🔹 Mensagem de carregamento imediata
             self._set_results("Carregando proximidades ...\n")
             self.master.update_idletasks()
 
@@ -163,9 +159,7 @@ class ProximityApp:
             t = Time(dt_utc, scale='utc')
             jd_tdb = t.tdb.jd
 
-            self._set_results(
-                'Carregando proximidades ...\nConsultando JPL HORIZONS para a data (TDB JD = {:.6f})...\n'.format(jd_tdb)
-            )
+            self._set_results('Carregando proximidades ...\nConsultando JPL HORIZONS para a data (TDB JD = {:.6f})...\n'.format(jd_tdb))
             self.master.update_idletasks()
 
             comet = Horizons(id='C/2025 N1', id_type='designation', location='@0', epochs=jd_tdb)
