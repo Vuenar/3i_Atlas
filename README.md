@@ -1,10 +1,10 @@
 # ☄️ 3i Atlas Tool
 
-![Status](https://img.shields.io/badge/status-finalizado-brightgreen)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
-![IDE](https://img.shields.io/badge/IDE-VSCode-blueviolet)
-![Git](https://img.shields.io/badge/versionamento-Git-orange)
+![Status](https://img.shields.io/badge/status-finalizado-brightgreen?style=for-the-badge)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue?style=for-the-badge)
+![License](https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge)
+![IDE](https://img.shields.io/badge/IDE-VSCode-blueviolet?style=for-the-badge)
+![Git](https://img.shields.io/badge/versionamento-Git-orange?style=for-the-badge)
 
 ## 📖 Visão Geral
 
@@ -76,4 +76,5 @@ Sinta-se livre para estudar, reutilizar e adaptar o código, desde que mantenha 
 ---
 
 💡 **Nota:** Este projeto foi desenvolvido exclusivamente para fins acadêmicos, como parte da formação universitária na Estácio.
+
 
